@@ -38,7 +38,6 @@ export default function KelolaToko() {
     }
   }
 
-  // Filter toko berdasarkan search term
   const filteredToko = toko.filter(tokoItem =>
     tokoItem.nama_toko.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tokoItem.alamat.toLowerCase().includes(searchTerm.toLowerCase()) ||

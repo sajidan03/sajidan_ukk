@@ -10,9 +10,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, UserPlus, Shield, User, Users } from "lucide-react"
+import { ArrowLeft, UserPlus, Shield, User } from "lucide-react"
 
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Dashboard', href: '/admin' },
@@ -22,10 +21,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Create() {
   const { data, setData, post, processing, errors } = useForm({
-    name: '',
+    nama: '',
     username: '',
     password: '',
-    role: 'operator',
+    role: 'member',
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,8 +35,8 @@ export default function Create() {
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'admin': return <Shield className="w-4 h-4" />
-      case 'operator': return <User className="w-4 h-4" />
-      default: return <Users className="w-4 h-4" />
+      case 'member': return <User className="w-4 h-4" />
+      default: return <User className="w-4 h-4" />
     }
   }
 
@@ -45,7 +44,7 @@ export default function Create() {
     switch (role) {
       case 'admin': return 'bg-red-100 text-red-700 border-red-200'
       case 'operator': return 'bg-blue-100 text-blue-700 border-blue-200'
-      default: return 'bg-green-100 text-green-700 border-green-200'
+      default: return 'bg-blue-100 text-blue-700 border-blue-200'
     }
   }
 
@@ -53,185 +52,181 @@ export default function Create() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Tambah User" />
 
-      <div className="w-full p-6">
-        {/* Header Section */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <UserPlus className="w-6 h-6 text-blue-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-800">Tambah User Baru</h1>
+      <div className="min-h-screen bg-gray-50 p-6">
+
+
+        {/* Form Section */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          {/* Form Header */}
+          <div className="mb-8 pb-6 border-b border-gray-100">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <UserPlus className="w-5 h-5 text-blue-600" />
+              Form Tambah User
+            </h2>
+            <p className="text-gray-600 mt-1">
+              Lengkapi form berikut untuk menambahkan user baru
+            </p>
           </div>
-          <p className="text-gray-600">Tambahkan user baru ke dalam sistem management iuran warga</p>
+
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Nama */}
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                  Nama Lengkap *
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={data.nama}
+                  onChange={(e) => setData('nama', e.target.value)}
+                  placeholder="Masukkan nama lengkap"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                {errors.nama && (
+                  <div className="text-red-600 text-sm flex items-center gap-2 mt-1">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    {errors.nama}
+                  </div>
+                )}
+              </div>
+
+              {/* Username */}
+              <div className="space-y-3">
+                <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+                  Username *
+                </Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={data.username}
+                  onChange={(e) => setData('username', e.target.value)}
+                  placeholder="Masukkan username"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                {errors.username && (
+                  <div className="text-red-600 text-sm flex items-center gap-2 mt-1">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    {errors.username}
+                  </div>
+                )}
+              </div>
+
+              {/* Password */}
+              <div className="space-y-3">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  Password *
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={data.password}
+                  onChange={(e) => setData('password', e.target.value)}
+                  placeholder="Masukkan password"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                {errors.password && (
+                  <div className="text-red-600 text-sm flex items-center gap-2 mt-1">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    {errors.password}
+                  </div>
+                )}
+              </div>
+
+              {/* Role */}
+              <div className="space-y-3">
+                <Label htmlFor="role" className="text-sm font-medium text-gray-700">
+                  Role *
+                </Label>
+                <Select
+                  value={data.role}
+                  onValueChange={(value) => setData("role", value)}
+                >
+                  <SelectTrigger id="role" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <SelectValue placeholder="Pilih role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="member">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Member
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="admin">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4" />
+                        Admin
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.role && (
+                  <div className="text-red-600 text-sm flex items-center gap-2 mt-1">
+                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    {errors.role}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Role Preview */}
+            <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-800 mb-3">Preview Role:</h4>
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 ${getRoleColor(data.role)}`}>
+                {getRoleIcon(data.role)}
+                <span className="text-sm font-medium capitalize">{data.role}</span>
+              </div>
+              <p className="text-sm text-blue-700 mt-3">
+                User akan memiliki akses sesuai dengan role yang dipilih.
+                <span className="font-medium"> Admin</span> memiliki akses penuh, sedangkan
+                <span className="font-medium"> Member</span> memiliki akses terbatas.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-200">
+              <Link
+                href="/admin/user"
+                className="flex items-center gap-3 px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Kembali ke Daftar User
+              </Link>
+              <Button
+                type="submit"
+                disabled={processing}
+                className="bg-blue-600 hover:bg-blue-700 px-8 py-3 text-white rounded-lg transition-all duration-200 flex items-center gap-2 min-w-[140px]"
+              >
+                {processing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Menyimpan...
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="w-4 h-4" />
+                    Simpan User
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
 
-        <Card className="w-full max-w-4xl mx-auto shadow-lg border-0">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
-            <CardTitle className="flex items-center gap-2">
-              <UserPlus className="w-5 h-5" />
-              Form Tambah User
-            </CardTitle>
-            <CardDescription>
-              Lengkapi form berikut untuk menambahkan user baru
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Nama */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium">
-                    Nama Lengkap *
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    value={data.name}
-                    onChange={(e) => setData('name', e.target.value)}
-                    placeholder="Masukkan nama lengkap"
-                    className="w-full"
-                  />
-                  {errors.name && (
-                    <div className="text-red-600 text-sm flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.name}
-                    </div>
-                  )}
-                </div>
-
-                {/* Username */}
-                <div className="space-y-2">
-                  <Label htmlFor="username" className="text-sm font-medium">
-                    Username *
-                  </Label>
-                  <Input
-                    id="username"
-                    type="text"
-                    value={data.username}
-                    onChange={(e) => setData('username', e.target.value)}
-                    placeholder="Masukkan username"
-                    className="w-full"
-                  />
-                  {errors.username && (
-                    <div className="text-red-600 text-sm flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.username}
-                    </div>
-                  )}
-                </div>
-
-                {/* Password */}
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium">
-                    Password *
-                  </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={data.password}
-                    onChange={(e) => setData('password', e.target.value)}
-                    placeholder="Masukkan password"
-                    className="w-full"
-                  />
-                  {errors.password && (
-                    <div className="text-red-600 text-sm flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.password}
-                    </div>
-                  )}
-                </div>
-
-                {/* Role */}
-                <div className="space-y-2">
-                  <Label htmlFor="role" className="text-sm font-medium">
-                    Role *
-                  </Label>
-                  <Select
-                    value={data.role}
-                    onValueChange={(value) => setData("role", value)}
-                  >
-                    <SelectTrigger id="role" className="w-full">
-                      <SelectValue placeholder="Pilih role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="operator">
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4" />
-                          Operator
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="admin">
-                        <div className="flex items-center gap-2">
-                          <Shield className="w-4 h-4" />
-                          Admin
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.role && (
-                    <div className="text-red-600 text-sm flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.role}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Role Preview */}
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium text-sm text-gray-700 mb-2">Preview Role:</h4>
-                <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border ${getRoleColor(data.role)}`}>
-                  {getRoleIcon(data.role)}
-                  <span className="text-sm font-medium capitalize">{data.role}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  User akan memiliki akses sesuai dengan role yang dipilih
-                </p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-4 border-t">
-                <Link
-                  href="/admin/user"
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Kembali ke Daftar User
-                </Link>
-                <Button
-                  type="submit"
-                  disabled={processing}
-                  className="bg-blue-600 hover:bg-blue-700 px-6 py-2"
-                >
-                  {processing ? (
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Menyimpan...
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <UserPlus className="w-4 h-4" />
-                      Simpan User
-                    </div>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
         {/* Info Box */}
-        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-4xl mx-auto">
-          <div className="flex items-start gap-3">
-            <div className="p-1 bg-yellow-100 rounded">
-              <Shield className="w-4 h-4 text-yellow-600" />
+        <div className="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <Shield className="w-5 h-5 text-yellow-600" />
             </div>
             <div>
-              <h4 className="font-medium text-yellow-800">Informasi Penting</h4>
-              <p className="text-sm text-yellow-700">
-                Pastikan data yang dimasukkan sudah benar. Role yang dipilih akan menentukan
-                hak akses user dalam sistem.
-              </p>
+              <h4 className="font-semibold text-yellow-800 mb-2">Informasi Penting</h4>
+              <ul className="text-sm text-yellow-700 space-y-1">
+                <li>• Pastikan data yang dimasukkan sudah benar dan valid</li>
+                <li>• Role yang dipilih akan menentukan hak akses user dalam sistem</li>
+                <li>• Password harus kuat dan aman, minimal 8 karakter</li>
+                <li>• Username harus unik dan belum digunakan oleh user lain</li>
+              </ul>
             </div>
           </div>
         </div>

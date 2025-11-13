@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Toko;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -17,7 +18,9 @@ class TokoController extends Controller
     public function index()
     {
         $toko = Toko::with('user')->latest()->get();
-
+        foreach ($toko as $item) {
+        Log::info("Toko: {$item->nama_toko}, ID User: {$item->id_user}, User: " . ($item->user ? $item->user->nama : 'NULL'));
+    }
         return inertia('Admin/Toko/index', [
             'toko' => $toko->map(function ($item) {
                 return [
@@ -34,7 +37,10 @@ class TokoController extends Controller
                     'user' => $item->user ? [
                         'nama' => $item->user->nama,
                         'username' => $item->user->username,
-                    ] : null
+                    ] : [
+                    'nama' => 'N/A',
+                    'username' => 'N/A'
+                ]
                 ];
             })
         ]);
@@ -105,7 +111,7 @@ class TokoController extends Controller
                     'nama_toko' => $toko->nama_toko,
                     'deskripsi' => $toko->deskripsi,
                     'gambar' => $toko->gambar ? '/storage/assets/toko/' . $toko->gambar : null,
-                    'id_user' => $toko->id_user, // Diperbaiki dari $toko->id
+                    'id_user' => $toko->id_user,
                     'kontak_toko' => $toko->kontak_toko,
                     'alamat' => $toko->alamat,
                     'created_at' => $toko->created_at->format('Y-m-d H:i:s'),
