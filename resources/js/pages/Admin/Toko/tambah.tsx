@@ -59,7 +59,7 @@ export default function CreateToko({ users }: { users: User[] }) {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8" encType="multipart/form-data">
             {/* Grid Layout */}
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Left Column */}

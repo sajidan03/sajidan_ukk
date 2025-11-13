@@ -49,50 +49,49 @@ class TokoController extends Controller
         ]);
     }
 
-    public function simpan(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_toko' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'id_user' => 'required|exists:users,id',
-            'kontak_toko' => 'required|string|max:20',
-            'alamat' => 'required|string',
+   public function simpan(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'nama_toko' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        'id_user' => 'required|exists:users,id',
+        'kontak_toko' => 'required|string|max:20',
+        'alamat' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+    }
+
+    try {
+        $gambarName = null;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $gambarName = 'toko_' . time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('storage/assets/toko'), $gambarName);
+        }
+
+        Toko::create([
+            'nama_toko' => $request->nama_toko,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarName,
+            'id_user' => $request->id_user,
+            'kontak_toko' => $request->kontak_toko,
+            'alamat' => $request->alamat,
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        try {
-            $gambarName = null;
-            if ($request->hasFile('gambar')) {
-                $file = $request->file('gambar');
-                $gambarName = 'toko_' . time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-
-                // Simpan file ke storage/assets/toko
-                $file->move(public_path('storage/assets/toko'), $gambarName);
-            }
-
-            Toko::create([
-                'nama_toko' => $request->nama_toko,
-                'deskripsi' => $request->deskripsi,
-                'gambar' => $gambarName,
-                'id_user' => $request->id_user,
-                'kontak_toko' => $request->kontak_toko,
-                'alamat' => $request->alamat,
-            ]);
-
-            return redirect()->route('admin.toko.index')
-                ->with('success', 'Toko berhasil ditambahkan!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
-                ->withInput();
-        }
+        return redirect()->route('admin.toko.index')
+            ->with('success', 'Toko berhasil ditambahkan!');
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+            ->withInput();
     }
+}
 
     public function show($id)
     {
@@ -149,56 +148,56 @@ class TokoController extends Controller
     }
 
     public function edit(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_toko' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'id_user' => 'required|exists:users,id',
-            'kontak_toko' => 'required|string|max:20',
-            'alamat' => 'required|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'nama_toko' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        'id_user' => 'required|exists:users,id',
+        'kontak_toko' => 'required|string|max:20',
+        'alamat' => 'required|string',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+    }
 
-        try {
-            $toko = Toko::findOrFail(decrypt($id));
+    try {
+        $toko = Toko::findOrFail(decrypt($id));
 
-            $gambarName = $toko->gambar;
-            if ($request->hasFile('gambar')) {
-                // Hapus gambar lama jika ada
-                if ($toko->gambar && file_exists(public_path('storage/assets/toko/' . $toko->gambar))) {
-                    unlink(public_path('storage/assets/toko/' . $toko->gambar));
-                }
-
-                $file = $request->file('gambar');
-                $gambarName = 'toko_' . time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-
-                // Simpan file ke storage/assets/toko
-                $file->move(public_path('storage/assets/toko'), $gambarName);
+        $gambarName = $toko->gambar;
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($toko->gambar && file_exists(public_path('storage/assets/toko/' . $toko->gambar))) {
+                unlink(public_path('storage/assets/toko/' . $toko->gambar));
             }
 
-            $toko->update([
-                'nama_toko' => $request->nama_toko,
-                'deskripsi' => $request->deskripsi,
-                'gambar' => $gambarName,
-                'id_user' => $request->id_user,
-                'kontak_toko' => $request->kontak_toko,
-                'alamat' => $request->alamat,
-            ]);
+            $file = $request->file('gambar');
+            $gambarName = 'toko_' . time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
 
-            return redirect()->route('admin.toko.index')
-                ->with('success', 'Toko berhasil diperbarui!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
-                ->withInput();
+            // Simpan file ke storage/assets/toko
+            $file->move(public_path('storage/assets/toko'), $gambarName);
         }
+
+        $toko->update([
+            'nama_toko' => $request->nama_toko,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarName, // Hanya nama file
+            'id_user' => $request->id_user,
+            'kontak_toko' => $request->kontak_toko,
+            'alamat' => $request->alamat,
+        ]);
+
+        return redirect()->route('admin.toko.index')
+            ->with('success', 'Toko berhasil diperbarui!');
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+            ->withInput();
     }
+}
 
     public function destroy($id)
     {
