@@ -22,6 +22,7 @@ interface Toko {
   updated_at: string
   encrypted_id: string
   user?: {
+    id: number,
     nama: string
     username: string
   }
@@ -32,7 +33,7 @@ export default function KelolaToko() {
   const toko = props.toko as Toko[]
   const [searchTerm, setSearchTerm] = useState('')
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus toko ini?')) {
       router.delete(`/admin/toko/hapus/${id}`)
     }
@@ -148,7 +149,7 @@ export default function KelolaToko() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="bg-blue-100 text-blue-700 px-2 py-1 text-xs rounded-md">
-                        {tokoItem.user?.nama || 'N/A'}
+                        {tokoItem.user?.nama || 'Tidak tersedia'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm">
@@ -166,7 +167,7 @@ export default function KelolaToko() {
                           Edit
                         </Link>
                         <button
-                          onClick={() => handleDelete(tokoItem.id)}
+                          onClick={() => handleDelete(tokoItem.encrypted_id)}
                           className="px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200 flex items-center gap-1"
                         >
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

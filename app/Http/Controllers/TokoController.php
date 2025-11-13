@@ -35,6 +35,7 @@ class TokoController extends Controller
                     'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $item->updated_at->format('Y-m-d H:i:s'),
                     'user' => $item->user ? [
+                        'id' => $item->user->id,
                         'nama' => $item->user->nama,
                         'username' => $item->user->username,
                     ] : [
@@ -175,7 +176,6 @@ class TokoController extends Controller
 
         $gambarName = $toko->gambar;
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
             if ($toko->gambar && file_exists(public_path('storage/assets/toko/' . $toko->gambar))) {
                 unlink(public_path('storage/assets/toko/' . $toko->gambar));
             }
@@ -183,7 +183,6 @@ class TokoController extends Controller
             $file = $request->file('gambar');
             $gambarName = 'toko_' . time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
 
-            // Simpan file ke storage/assets/toko
             $file->move(public_path('storage/assets/toko'), $gambarName);
         }
 
@@ -210,7 +209,6 @@ class TokoController extends Controller
         try {
             $toko = Toko::findOrFail(decrypt($id));
 
-            // Hapus gambar jika ada
             if ($toko->gambar && file_exists(public_path('storage/assets/toko/' . $toko->gambar))) {
                 unlink(public_path('storage/assets/toko/' . $toko->gambar));
             }

@@ -1284,22 +1284,17 @@ namespace App\Models {
      * @property string|null $remember_token
      * @property mixed $role
      * @property string|null $kontak
-     * @property \Illuminate\Support\Carbon|null $two_factor_confirmed_at
-     * @property string|null $two_factor_recovery_codes
-     * @property string|null $two_factor_secret
      * @property string $password
      * @property string $username
      * @property string $nama
      * @property int $id
+     * @property-read \App\Models\Toko $toko
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereNama($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUsername($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereTwoFactorSecret($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereTwoFactorRecoveryCodes($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereTwoFactorConfirmedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereKontak($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRole($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)

@@ -27,12 +27,30 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+         User::create(
+            [
+                'nama' => 'Supri',
+                'username' => 'supri',
+                'password' => bcrypt('supri'),
+                'role' => 'admin',
+            ]
+        );
         Toko::create(
             [
                 'nama_toko' => 'Supri',
                 'deskripsi' => 'Menjual berbagai alat perabotan',
                 'gambar' => 'toko.png',
                 'id_user' => 1,
+                'kontak_toko' => '08123456789',
+                'alamat' => 'Tasikmalaya',
+            ],
+        );
+        Toko::create(
+            [
+                'nama_toko' => 'Supri',
+                'deskripsi' => 'Menjual berbagai alat perabotan',
+                'gambar' => 'toko.png',
+                'id_user' => 2,
                 'kontak_toko' => '08123456789',
                 'alamat' => 'Tasikmalaya',
             ],
