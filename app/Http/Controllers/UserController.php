@@ -18,7 +18,7 @@ class UserController extends Controller
         $users['users'] = User::all()->map(function ($user) {
             return [
                 'id' => $user->id,
-                'name' => $user->name,
+                'nama' => $user->nama,
                 'username' => $user->username,
                 'password'=> $user->password,
                 'role' => $user->role,

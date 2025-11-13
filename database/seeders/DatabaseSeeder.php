@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         User::create(
             [
-                'nama' => 'Test User',
+                'nama' => 'Muhammad Sajidan',
                 'username' => 'sajidan',
                 'password' => bcrypt('sajidan'),
                 'role' => 'admin',
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             [
                 'nama_toko' => 'Supri',
                 'deskripsi' => 'Menjual berbagai alat perabotan',
-                'gambar' => 'gambar.png',
+                'gambar' => 'toko.png',
                 'id_user' => 1,
                 'kontak_toko' => '08123456789',
                 'alamat' => 'Tasikmalaya',

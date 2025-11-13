@@ -12,7 +12,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface User {
   id: number
-  name: string
+  nama: string
   username: string
   role: string
   created_at: string
@@ -75,7 +75,7 @@ export default function Dashboard() {
                 users.map((users, index) => (
                   <tr key={users.id} className="border-b hover:bg-gray-50">
                     <td className="px-4 py-3">{index + 1}</td>
-                    <td className="px-4 py-3">{users.name}</td>
+                    <td className="px-4 py-3">{users.nama}</td>
                     <td className="px-4 py-3">{users.username}</td>
                     <td className="px-4 py-3">
                       <span
