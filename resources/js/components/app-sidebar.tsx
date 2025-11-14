@@ -11,7 +11,8 @@ import {
     Users,
     LogOut,
     ShoppingCart,
-    LayoutDashboard
+    LayoutDashboard,
+    ShoppingBagIcon
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -44,6 +45,11 @@ const memberNavItems: NavItem[] = [
         title: 'Produk',
         href: '/member/produk',
         icon: ShoppingCart,
+    },
+    {
+        title: 'Toko saya',
+        href: '/member/toko',
+        icon: ShoppingBagIcon,
     }
 ];
 

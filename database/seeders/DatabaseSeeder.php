@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
                 'nama_toko' => 'Supri',
                 'deskripsi' => 'Menjual berbagai alat perabotan',
                 'gambar' => 'toko.png',
-                'id_user' => 1,
+                'id_user' => 2,
                 'kontak_toko' => '08123456789',
                 'alamat' => 'Tasikmalaya',
             ],

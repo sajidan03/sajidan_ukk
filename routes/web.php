@@ -24,6 +24,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\TokoController;
+use App\Http\Controllers\TokoSayaController;
 use App\Models\Ekstrakulikuler;
 use Illuminate\Support\Facades\Route;
 
@@ -43,14 +44,14 @@ Route::middleware(['auth', 'verified'])
         Route::post('user/edit/{id}', [UserController::class, 'editUser'])->name('userEdit');
         Route::delete('user/hapus/{id}', [UserController::class, 'hapusUser'])->name('userHapus');
         //kelola-toko
-        Route::get('/toko', [TokoController::class, 'index'])->name('admin.toko.index');
-        Route::get('/toko/tambah', [TokoController::class, 'simpanView'])->name('admin.toko.create');
-        Route::post('/toko/tambah', [TokoController::class, 'simpan'])->name('admin.toko.store');
-        Route::get('/toko/{id}', [TokoController::class, 'show'])->name('admin.toko.show');
-        Route::get('/toko/edit/{id}', [TokoController::class, 'editView'])->name('admin.toko.edit');
-        Route::put('/toko/edit/{id}', [TokoController::class, 'edit'])->name('admin.toko.update');
-        Route::delete('/toko/hapus/{id}', [TokoController::class, 'destroy'])->name('admin.toko.destroy');
-        Route::get('/toko/export', [TokoController::class, 'export'])->name('admin.toko.export');
+        Route::get('toko', [TokoController::class, 'index'])->name('admin.toko.index');
+        Route::get('toko/tambah', [TokoController::class, 'simpanView'])->name('admin.toko.create');
+        Route::post('toko/tambah', [TokoController::class, 'simpan'])->name('admin.toko.store');
+        Route::get('toko/{id}', [TokoController::class, 'show'])->name('admin.toko.show');
+        Route::get('toko/edit/{id}', [TokoController::class, 'editView'])->name('admin.toko.edit');
+        Route::put('toko/edit/{id}', [TokoController::class, 'edit'])->name('admin.toko.update');
+        Route::delete('toko/hapus/{id}', [TokoController::class, 'destroy'])->name('admin.toko.destroy');
+        Route::get('toko/export', [TokoController::class, 'export'])->name('admin.toko.export');
     });
 
 Route::middleware(['auth', 'verified'])
@@ -59,6 +60,13 @@ Route::middleware(['auth', 'verified'])
         Route::get('dashboard', [MemberController::class, 'index'])->name('member.dashboard');
         //kelola-produk
         Route::get('produk', [ProdukController::class, 'index'])->name('memberProdukView');
+        Route::get('produk/tambah', [ProdukController::class, 'simpanView'])->name('memberProdukSimpanView');
+        Route::post('produk/tambah', [ProdukController::class, 'simpan'])->name('memberProdukSimpan');
+        //kelola-toko
+        Route::get('toko', [TokoSayaController::class, 'index'])->name('member.toko.index');
+        Route::delete('toko/hapus/{id}', [TokoSayaController::class, 'destroy'])->name('member.toko.hapus');
+        Route::get('toko/buat', [TokoSayaController::class, 'create'])->name('member.toko.buat');
+        Route::get('toko/edit', [TokoSayaController::class, 'edit'])->name('member.toko.edit');
         });
 
 require __DIR__ . '/settings.php';
