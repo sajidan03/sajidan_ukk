@@ -64,6 +64,7 @@ Route::middleware(['auth', 'verified'])
         Route::post('produk/tambah', [ProdukController::class, 'simpan'])->name('memberProdukSimpan');
         //kelola-toko
         Route::get('toko', [TokoSayaController::class, 'index'])->name('member.toko.index');
+        Route::get('toko/edit/{id}', [TokoSayaController::class, 'editView'])->name('memberTokoSaya');
         Route::delete('toko/hapus/{id}', [TokoSayaController::class, 'destroy'])->name('member.toko.hapus');
         Route::get('toko/buat', [TokoSayaController::class, 'create'])->name('member.toko.buat');
         Route::get('toko/edit', [TokoSayaController::class, 'edit'])->name('member.toko.edit');

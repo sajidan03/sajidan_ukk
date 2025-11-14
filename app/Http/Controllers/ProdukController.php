@@ -106,53 +106,53 @@ class ProdukController extends Controller
         ]);
     }
 
-    // public function simpan(Request $request)
-    // {
-    //     $userToko = Toko::where('id_user', Auth::id())->first();
+    public function simpan(Request $request)
+    {
+        $userToko = Toko::where('id_user', Auth::id())->first();
 
-    //     if (!$userToko) {
-    //         return back()->with('error', 'Anda belum memiliki toko.');
-    //     }
+        if (!$userToko) {
+            return back()->with('error', 'Anda belum memiliki toko.');
+        }
 
-    //     $request->validate([
-    //         'id_kategori' => 'required|exists:kategori,id',
-    //         'nama_produk' => 'required|string|max:255',
-    //         'harga' => 'required|numeric|min:0',
-    //         'stok' => 'required|integer|min:0',
-    //         'deskripsi' => 'required|string',
-    //         'gambar_produk' => 'required|array|min:1|max:5',
-    //         'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-    //     ]);
+        $request->validate([
+            'id_kategori' => 'required|exists:kategoris,id',
+            'nama_produk' => 'required|string|max:255',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'deskripsi' => 'required|string',
+            'gambar_produk' => 'required|array|min:1|max:5',
+            'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    //     try {
-    //         $produk = Produk::create([
-    //             'id_kategori' => $request->id_kategori,
-    //             'nama_produk' => $request->nama_produk,
-    //             'harga' => $request->harga,
-    //             'stok' => $request->stok,
-    //             'deskripsi' => $request->deskripsi,
-    //             'id_toko' => $userToko->id,
-    //             'tanggal_upload' => now(),
-    //         ]);
+        try {
+            $produk = Produk::create([
+                'id_kategori' => $request->id_kategori,
+                'nama_produk' => $request->nama_produk,
+                'harga' => $request->harga,
+                'stok' => $request->stok,
+                'deskripsi' => $request->deskripsi,
+                'id_toko' => $userToko->id,
+                'tanggal_upload' => now(),
+            ]);
 
-    //         if ($request->hasFile('gambar_produk')) {
-    //             foreach ($request->file('gambar_produk') as $gambar) {
-    //                 $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
+            if ($request->hasFile('gambar_produk')) {
+                foreach ($request->file('gambar_produk') as $gambar) {
+                    $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
 
-    //                 $gambar->storeAs('assets/produk', $fileName);
+                    $gambar->storeAs('assets/produk', $fileName);
 
-    //                 GambarProduk::create([
-    //                     'id_produk' => $produk->id,
-    //                     'nama_gambar' => $fileName,
-    //                 ]);
-    //             }
-    //         }
+                    GambarProduk::create([
+                        'id_produk' => $produk->id,
+                        'nama_gambar' => $fileName,
+                    ]);
+                }
+            }
 
-    //         return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
-    //     } catch (\Exception $e) {
-    //         return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
-    //     }
-    // }
+            return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
+        }
+    }
 //     public function simpan(Request $request)
 // {
 //     $userToko = Toko::where('id_user', Auth::id())->first();
@@ -198,64 +198,66 @@ class ProdukController extends Controller
 //         return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
 //     }
 // }
-public function simpan(Request $request)
-{
-    $userToko = Toko::where('id_user', Auth::id())->first();
+// public function simpan(Request $request)
+// {
 
-    if (!$userToko) {
-        return back()->with('error', 'Anda belum memiliki toko.');
-    }
 
-    Log::info('📥 Data Request:', $request->all());
-    Log::info('📁 Files:', $request->hasFile('gambar_produk') ? ['count' => count($request->file('gambar_produk'))] : ['no_files']);
+//     $userToko = Toko::where('id_user', Auth::id())->first();
 
-    $request->validate([
-        'id_kategori' => 'required|exists:kategoris,id',
-        'nama_produk' => 'required|string|max:255',
-        'harga' => 'required|numeric|min:0',
-        'stok' => 'required|integer|min:0',
-        'deskripsi' => 'required|string',
-        'gambar_produk' => 'required|array|min:1|max:5',
-        'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+//     if (!$userToko) {
+//         return back()->with('error', 'Anda belum memiliki toko.');
+//     }
 
-    try {
-        Log::info('🔄 Membuat produk...');
+//     Log::info('📥 Data Request:', $request->all());
+//     Log::info('📁 Files:', $request->hasFile('gambar_produk') ? ['count' => count($request->file('gambar_produk'))] : ['no_files']);
 
-        $produk = Produk::create([
-            'id_kategori' => 1,
-            'nama_produk' => $request->nama_produk,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
-            'deskripsi' => $request->deskripsi,
-            'id_toko' => $userToko->id,
-            'tanggal_upload' => now(),
-        ]);
+//     $request->validate([
+//         'id_kategori' => 'required|exists:kategoris,id',
+//         'nama_produk' => 'required|string|max:255',
+//         'harga' => 'required|numeric|min:0',
+//         'stok' => 'required|integer|min:0',
+//         'deskripsi' => 'required|string',
+//         'gambar_produk' => 'required|array|min:1|max:5',
+//         'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+//     ]);
 
-        Log::info('✅ Produk created dengan ID: ' . $produk->id);
+//     try {
+//         Log::info('🔄 Membuat produk...');
 
-        if ($request->hasFile('gambar_produk')) {
-            foreach ($request->file('gambar_produk') as $gambar) {
-                $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
-                $gambar->storeAs('storage/assets/produk', $fileName);
+//         $produk = Produk::create([
+//             'id_kategori' => 1,
+//             'nama_produk' => $request->nama_produk,
+//             'harga' => $request->harga,
+//             'stok' => $request->stok,
+//             'deskripsi' => $request->deskripsi,
+//             'id_toko' => $userToko->id,
+//             'tanggal_upload' => now(),
+//         ]);
 
-                GambarProduk::create([
-                    'id_produk' => $produk->id,
-                    'nama_gambar' => $fileName,
-                ]);
+//         Log::info('✅ Produk created dengan ID: ' . $produk->id);
 
-                Log::info('📸 Gambar disimpan: ' . $fileName);
-            }
-        }
+//         if ($request->hasFile('gambar_produk')) {
+//             foreach ($request->file('gambar_produk') as $gambar) {
+//                 $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
+//                 $gambar->storeAs('storage/assets/produk', $fileName);
 
-        Log::info('🎉 Produk berhasil disimpan');
-        return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
+//                 GambarProduk::create([
+//                     'id_produk' => $produk->id,
+//                     'nama_gambar' => $fileName,
+//                 ]);
 
-    } catch (Exception $e) {
-        Log::error('❌ Error: ' . $e->getMessage());
-        Log::error('📍 File: ' . $e->getFile());
-        Log::error('📄 Line: ' . $e->getLine());
-        return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
-    }
-}
+//                 Log::info('📸 Gambar disimpan: ' . $fileName);
+//             }
+//         }
+
+//         Log::info('🎉 Produk berhasil disimpan');
+//         // return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
+
+//     } catch (Exception $e) {
+//         Log::error('❌ Error: ' . $e->getMessage());
+//         Log::error('📍 File: ' . $e->getFile());
+//         Log::error('📄 Line: ' . $e->getLine());
+//         return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
+//     }
+// }
 }

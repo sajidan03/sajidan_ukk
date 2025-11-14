@@ -697,6 +697,7 @@ class ComposerStaticInitde34702a58937cb6544a6c94104a1666
         'App\\Http\\Controllers\\Settings\\PasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Settings/PasswordController.php',
         'App\\Http\\Controllers\\Settings\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/Settings/ProfileController.php',
         'App\\Http\\Controllers\\TokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/TokoController.php',
+        'App\\Http\\Controllers\\TokoSayaController' => __DIR__ . '/../..' . '/app/Http/Controllers/TokoSayaController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
         'App\\Http\\Controllers\\WelcomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/WelcomeController.php',
         'App\\Http\\Middleware\\HandleAppearance' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleAppearance.php',
