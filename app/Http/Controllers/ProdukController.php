@@ -36,6 +36,7 @@ class ProdukController extends Controller
                     'stok' => $item->stok,
                     'deskripsi' => $item->deskripsi,
                     'tanggal_upload' => $item->tanggal_upload,
+                    'url_wa' => $item->url_wa,
                     'id_toko' => $item->id_toko,
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
@@ -108,6 +109,7 @@ class ProdukController extends Controller
 
     public function simpan(Request $request)
     {
+        // dd($request->all());
         $userToko = Toko::where('id_user', Auth::id())->first();
 
         if (!$userToko) {
@@ -122,6 +124,7 @@ class ProdukController extends Controller
             'deskripsi' => 'required|string',
             'gambar_produk' => 'required|array|min:1|max:5',
             'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'url_wa' => 'nullable|string|max:255',
         ]);
 
         try {
@@ -133,6 +136,7 @@ class ProdukController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'id_toko' => $userToko->id,
                 'tanggal_upload' => now(),
+                'url_wa' => $request->url_wa,
             ]);
 
             if ($request->hasFile('gambar_produk')) {
@@ -143,14 +147,17 @@ class ProdukController extends Controller
 
                     GambarProduk::create([
                         'id_produk' => $produk->id,
-                        'nama_gambar' => $fileName,
+                        'nama_gambar' => $fileName
+                        // 'nama_gambar' => 'logo.png
                     ]);
                 }
             }
 
             return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            dd($e->getMessage());
             return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
+
         }
     }
 //     public function simpan(Request $request)

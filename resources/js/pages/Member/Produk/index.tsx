@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout'
 import { type BreadcrumbItem } from '@/types'
 import { Head, Link, usePage, router } from '@inertiajs/react'
+import { url } from 'inspector'
 import { useState } from 'react'
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,6 +26,7 @@ interface Produk {
   stok: number
   deskripsi: string
   tanggal_upload: string
+  url_wa: string;
   id_toko: number
   created_at: string
   updated_at: string
@@ -149,6 +151,7 @@ export default function KelolaProduk() {
                 <th className="px-4 py-3 text-left">Toko</th>
                 <th className="px-4 py-3 text-left">Jumlah Gambar</th>
                 <th className="px-4 py-3 text-left">Tanggal Upload</th>
+                <th className="px-4 py-3 text-left">URL Wa</th>
                 <th className="px-4 py-3 text-center">Aksi</th>
               </tr>
             </thead>
@@ -215,6 +218,9 @@ export default function KelolaProduk() {
                     </td>
                     <td className="px-4 py-3 text-sm">
                       {formatDate(produkItem.tanggal_upload)}
+                    </td>
+                       <td className="px-4 py-3 text-sm">
+                        {produkItem.url_wa }
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">

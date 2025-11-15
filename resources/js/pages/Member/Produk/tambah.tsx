@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout'
 import { type BreadcrumbItem } from '@/types'
-import { Head, Link, useForm, usePage } from '@inertiajs/react'
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react'
 import { useState, useRef } from 'react'
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,7 +27,7 @@ interface Toko {
 export default function TambahProduk() {
   const { props } = usePage()
   const kategori = props.kategori as Kategori[]
-  const toko = props.toko as Toko 
+  const toko = props.toko as Toko
 
   const [previewImages, setPreviewImages] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -43,7 +43,12 @@ export default function TambahProduk() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    post('/member/produk/tambah')
+    router.post('/member/produk/tambah',data,{
+        preserveState: true,
+    })
+    console.log('====================================');
+    console.log("SUCCESS");
+    console.log('====================================');
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +112,7 @@ export default function TambahProduk() {
 
           {/* Form */}
           <div className="bg-white rounded-lg shadow-sm border">
-            <form onSubmit={handleSubmit} className="p-8">
+            <form onSubmit={handleSubmit} className="p-8" encType='multipart/form-data'>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Kolom Kiri - Data Produk */}
                 <div className="space-y-6">
