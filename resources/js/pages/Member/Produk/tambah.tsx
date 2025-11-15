@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout'
 import { type BreadcrumbItem } from '@/types'
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react'
+import { Head, Link,  useForm, usePage } from '@inertiajs/react'
 import { useState, useRef } from 'react'
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,17 +38,14 @@ export default function TambahProduk() {
     harga: '',
     stok: '',
     deskripsi: '',
+    url_wa: '',
     gambar_produk: [] as File[],
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    router.post('/member/produk/tambah',data,{
-        preserveState: true,
-    })
-    console.log('====================================');
-    console.log("SUCCESS");
-    console.log('====================================');
+    post('/member/produk/tambah')
+
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,6 +208,22 @@ export default function TambahProduk() {
                         <p className="mt-1 text-sm text-red-600">{errors.stok}</p>
                       )}
                     </div>
+                  </div>
+
+                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      URL Wa <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={data.url_wa}
+                      onChange={e => setData('url_wa', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Masukkan URL Wa"
+                    />
+                    {errors.url_wa && (
+                      <p className="mt-1 text-sm text-red-600">{errors.url_wa}</p>
+                    )}
                   </div>
 
                   {/* Deskripsi */}

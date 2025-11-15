@@ -1,7 +1,6 @@
 import AppLayout from '@/layouts/app-layout'
 import { type BreadcrumbItem } from '@/types'
 import { Head, Link, usePage, router } from '@inertiajs/react'
-import { url } from 'inspector'
 import { useState } from 'react'
 
 const breadcrumbs: BreadcrumbItem[] = [

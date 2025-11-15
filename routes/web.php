@@ -62,6 +62,9 @@ Route::middleware(['auth', 'verified'])
         Route::get('produk', [ProdukController::class, 'index'])->name('memberProdukView');
         Route::get('produk/tambah', [ProdukController::class, 'simpanView'])->name('memberProdukSimpanView');
         Route::post('produk/tambah', [ProdukController::class, 'simpan'])->name('memberProdukSimpan');
+        ROute::get('produk/edit/{id}', [ProdukController::class, 'editView'])->name('memberProdukEditView');
+        Route::post('produk/edit/{id}', [ProdukController::class, 'edit'])->name('memberProdukEdit');
+        Route::delete('produk/hapus/{id}', [ProdukController::class, 'destroy'])->name('memberProdukHapus');
         //kelola-toko
         Route::get('toko', [TokoSayaController::class, 'index'])->name('member.toko.index');
         Route::get('toko/edit/{id}', [TokoSayaController::class, 'editView'])->name('memberTokoSaya');

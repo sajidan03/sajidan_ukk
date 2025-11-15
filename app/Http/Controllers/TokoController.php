@@ -63,7 +63,7 @@ class TokoController extends Controller
         'deskripsi' => 'required|string',
         'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         'id_user' => 'required|exists:users,id',
-        'kontak_toko' => 'required|string|max:20',
+        'kontak_toko' => 'required|string',
         'alamat' => 'required|string',
     ]);
 
@@ -189,7 +189,7 @@ class TokoController extends Controller
         $toko->update([
             'nama_toko' => $request->nama_toko,
             'deskripsi' => $request->deskripsi,
-            'gambar' => $gambarName, 
+            'gambar' => $gambarName,
             'id_user' => $request->id_user,
             'kontak_toko' => $request->kontak_toko,
             'alamat' => $request->alamat,

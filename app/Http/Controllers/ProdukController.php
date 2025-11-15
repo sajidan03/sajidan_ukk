@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -109,7 +110,6 @@ class ProdukController extends Controller
 
     public function simpan(Request $request)
     {
-        // dd($request->all());
         $userToko = Toko::where('id_user', Auth::id())->first();
 
         if (!$userToko) {
@@ -160,111 +160,130 @@ class ProdukController extends Controller
 
         }
     }
-//     public function simpan(Request $request)
-// {
-//     $userToko = Toko::where('id_user', Auth::id())->first();
 
-//     if (!$userToko) {
-//         return back()->with('error', 'Anda belum memiliki toko.');
-//     }
+    public function editView($id)
+    {
+        try {
+            $decryptedId = decrypt($id);
+            $produk = Produk::with(['kategori', 'toko', 'gambarProduk'])
+                ->where('id', $decryptedId)
+                ->firstOrFail();
 
-//     $request->validate([
-//         'id_kategori' => 'required|exists:kategoris,id',
-//         'nama_produk' => 'required|string|max:255',
-//         'harga' => 'required|numeric|min:0',
-//         'stok' => 'required|integer|min:0',
-//         'deskripsi' => 'required|string',
-//         'gambar_produk' => 'required|array|min:1|max:5',
-//         'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-//     ]);
+            $userToko = Toko::where('id_user', Auth::id())->first();
 
-//     try {
-//         $produk = Produk::create([
-//             'id_kategori' => $request->id_kategori,
-//             'nama_produk' => $request->nama_produk,
-//             'harga' => $request->harga,
-//             'stok' => $request->stok,
-//             'deskripsi' => $request->deskripsi,
-//             'id_toko' => $userToko->id,
-//             'tanggal_upload' => now(),
-//         ]);
+            if ($produk->id_toko != $userToko->id) {
+                return redirect()->route('memberProdukView')->with('error', 'Anda tidak memiliki akses untuk mengedit produk ini.');
+            }
 
-//         if ($request->hasFile('gambar_produk')) {
-//             foreach ($request->file('gambar_produk') as $gambar) {
-//                 $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
-//                 $gambar->storeAs('/storage/assets/produk', $fileName);
-//                 GambarProduk::create([
-//                     'id_produk' => $produk->id,
-//                     'nama_gambar' => $fileName,
-//                 ]);
-//             }
-//         }
+            $kategori = Kategori::all();
 
-//         return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
-//     } catch (Exception $e) {
-//         return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
-//     }
-// }
-// public function simpan(Request $request)
-// {
+            $produkData = [
+                'id' => $produk->id,
+                'encrypted_id' => encrypt($produk->id),
+                'id_kategori' => $produk->id_kategori,
+                'nama_produk' => $produk->nama_produk,
+                'harga' => $produk->harga,
+                'stok' => $produk->stok,
+                'deskripsi' => $produk->deskripsi,
+                'url_wa' => $produk->url_wa,
+                'gambar_produk' => $produk->gambarProduk->map(function ($gambar) {
+                    return [
+                        'id' => $gambar->id,
+                        'nama_gambar' => $gambar->nama_gambar,
+                        'url' => Storage::url('assets/produk/' . $gambar->nama_gambar) // Add URL for frontend
+                    ];
+                })->toArray(),
+            ];
 
+            return Inertia::render('Member/Produk/edit', [
+                'produk' => $produkData,
+                'kategori' => $kategori,
+                'toko' => $userToko,
+            ]);
 
-//     $userToko = Toko::where('id_user', Auth::id())->first();
+        } catch (\Exception $e) {
+            Log::error('Error in editView: ' . $e->getMessage());
+            return redirect()->route('memberProdukView')->with('error', 'Produk tidak ditemukan.');
+        }
+    }
 
-//     if (!$userToko) {
-//         return back()->with('error', 'Anda belum memiliki toko.');
-//     }
+    public function edit(Request $request, $id)
+    {
+        try {
+            $decryptedId = decrypt($id);
+            $produk = Produk::findOrFail($decryptedId);
 
-//     Log::info('📥 Data Request:', $request->all());
-//     Log::info('📁 Files:', $request->hasFile('gambar_produk') ? ['count' => count($request->file('gambar_produk'))] : ['no_files']);
+            $userToko = Toko::where('id_user', Auth::id())->first();
 
-//     $request->validate([
-//         'id_kategori' => 'required|exists:kategoris,id',
-//         'nama_produk' => 'required|string|max:255',
-//         'harga' => 'required|numeric|min:0',
-//         'stok' => 'required|integer|min:0',
-//         'deskripsi' => 'required|string',
-//         'gambar_produk' => 'required|array|min:1|max:5',
-//         'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-//     ]);
+            if ($produk->id_toko != $userToko->id) {
+                return back()->with('error', 'Anda tidak memiliki akses untuk mengedit produk ini.');
+            }
 
-//     try {
-//         Log::info('🔄 Membuat produk...');
+            $request->validate([
+                'id_kategori' => 'required|exists:kategoris,id',
+                'nama_produk' => 'required|string|max:255',
+                'harga' => 'required|numeric|min:0',
+                'stok' => 'required|integer|min:0',
+                'deskripsi' => 'required|string',
+                'gambar_produk' => 'nullable|array|max:5',
+                'gambar_produk.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+                'url_wa' => 'nullable|string|max:255',
+                'deleted_images' => 'nullable|array',
+            ]);
 
-//         $produk = Produk::create([
-//             'id_kategori' => 1,
-//             'nama_produk' => $request->nama_produk,
-//             'harga' => $request->harga,
-//             'stok' => $request->stok,
-//             'deskripsi' => $request->deskripsi,
-//             'id_toko' => $userToko->id,
-//             'tanggal_upload' => now(),
-//         ]);
+            // Update produk data
+            $produk->update([
+                'id_kategori' => $request->id_kategori,
+                'nama_produk' => $request->nama_produk,
+                'harga' => $request->harga,
+                'stok' => $request->stok,
+                'deskripsi' => $request->deskripsi,
+                'url_wa' => $request->url_wa,
+            ]);
 
-//         Log::info('✅ Produk created dengan ID: ' . $produk->id);
+            // Handle deleted images
+            if ($request->has('deleted_images') && !empty($request->deleted_images)) {
+                foreach ($request->deleted_images as $deletedImage) {
+                    // Extract filename from URL or use directly
+                    $filename = basename($deletedImage);
 
-//         if ($request->hasFile('gambar_produk')) {
-//             foreach ($request->file('gambar_produk') as $gambar) {
-//                 $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
-//                 $gambar->storeAs('storage/assets/produk', $fileName);
+                    // Find and delete the image record
+                    $gambar = GambarProduk::where('id_produk', $produk->id)
+                        ->where('nama_gambar', $filename)
+                        ->first();
 
-//                 GambarProduk::create([
-//                     'id_produk' => $produk->id,
-//                     'nama_gambar' => $fileName,
-//                 ]);
+                    if ($gambar) {
+                        // Delete physical file
+                        $filePath = storage_path('app/assets/produk/' . $gambar->nama_gambar);
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                        // Delete database record
+                        $gambar->delete();
+                    }
+                }
+            }
 
-//                 Log::info('📸 Gambar disimpan: ' . $fileName);
-//             }
-//         }
+            // Handle new images
+            if ($request->hasFile('gambar_produk')) {
+                foreach ($request->file('gambar_produk') as $gambar) {
+                    $fileName = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
 
-//         Log::info('🎉 Produk berhasil disimpan');
-//         // return redirect()->route('memberProdukView')->with('success', 'Produk berhasil ditambahkan.');
+                    $gambar->storeAs('assets/produk', $fileName);
 
-//     } catch (Exception $e) {
-//         Log::error('❌ Error: ' . $e->getMessage());
-//         Log::error('📍 File: ' . $e->getFile());
-//         Log::error('📄 Line: ' . $e->getLine());
-//         return back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
-//     }
-// }
+                    GambarProduk::create([
+                        'id_produk' => $produk->id,
+                        'nama_gambar' => $fileName
+                    ]);
+                }
+            }
+
+            return redirect()->route('memberProdukView')->with('success', 'Produk berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            Log::error('Error updating product: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui produk: ' . $e->getMessage());
+        }
+    }
+
 }
